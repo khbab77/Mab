@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>📍 إرسال موقعي إلى الإيميل</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function(){
+      // Public Key (User ID)
+      emailjs.init("6VfcdCXz6J4TDZIXr");  
+    })();
+
+    function sendLocation(lat, lon) {
+      // إرسال البيانات باستخدام Service ID و Template ID
+      emailjs.send("service_tvydgr9", "template_18najwh", {
+        latitude: lat,
+        longitude: lon,
+        email_to: "al.khbab77@gmail.com"
+      })
+      .then(function(response) {
+        alert("✅ تم إرسال موقعك إلى الإيميل بنجاح");
+      }, function(error) {
+        alert("❌ فشل الإرسال: " + JSON.stringify(error));
+      });
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            sendLocation(position.coords.latitude, position.coords.longitude);
+          },
+          function(error) {
+            alert("⚠️ لم يتم تحديد الموقع");
+          }
+        );
+      } else {
+        alert("المتصفح لا يدعم تحديد الموقع.");
+      }
+    }
+  </script>
+</head>
+<body style="text-align:center; font-family:Arial">
+  <h2>اضغط الزر لإرسال موقعك إلى الإيميل</h2>
+  <button onclick="getLocation()" 
+          style="padding:10px 20px; font-size:18px; border-radius:8px; background:#28a745; color:#fff; border:none; cursor:pointer">
+    📍 أرسل موقعي
+  </button>
+</body>
+</html>
