@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفعيل الموقع الجغرافي</title>
+    <title>تحديد الموقع الجغرافي</title>
     <style>
         * {
             margin: 0;
@@ -11,254 +11,247 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            color: #fff;
             padding: 20px;
         }
-        
-        .location-container {
-            background: white;
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             text-align: center;
-            max-width: 450px;
-            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
-        .location-icon {
-            font-size: 80px;
-            color: #667eea;
+
+        h1 {
+            font-size: 28px;
             margin-bottom: 20px;
         }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-        
-        p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            font-size: 16px;
-        }
-        
-        .enable-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
+
+        .status {
             font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
-        
-        .enable-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .skip-btn {
-            background: transparent;
-            color: #666;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        
-        .skip-btn:hover {
-            color: #333;
-        }
-        
-        .status-message {
-            padding: 15px;
-            border-radius: 10px;
+
+        .location-info {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
             margin-top: 20px;
             display: none;
         }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+
+        .location-info.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
         }
-        
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .location-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .location-detail:last-child {
+            border-bottom: none;
+        }
+
+        .location-detail span:first-child {
+            opacity: 0.8;
+        }
+
+        .location-detail span:last-child {
+            font-weight: 500;
+        }
+
         .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .hidden {
+            background: rgba(255, 59, 48, 0.2);
+            border: 1px solid rgba(255, 59, 48, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
             display: none;
         }
-        
-        .permission-granted {
-            text-align: center;
-            padding: 30px;
+
+        .error.active {
+            display: block;
+            animation: shake 0.5s ease;
         }
-        
-        .permission-granted .location-icon {
-            color: #28a745;
-            font-size: 60px;
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #fff;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
 <body>
-    <div class="location-container" id="locationContainer">
-        <!-- حالة طلب التفعيل -->
-        <div id="permissionRequest">
-            <div class="location-icon">📍</div>
-            <h1>تفعيل خدمة الموقع</h1>
-            <p>لتتمكن من الحصول على معلومات الطقس الدقيقة في منطقتك، يرجى تفعيل خدمة الموقع الجغرافي.</p>
-            <p>سيسمح هذا للتطبيق بعرض بيانات الطقس المخصصة لموقعك الحالي.</p>
-            
-            <button class="enable-btn" onclick="enableLocation()">تفعيل الموقع</button>
-            <button class="skip-btn" onclick="skipLocation()">تخطي للآن</button>
-            
-            <div id="statusMessage" class="status-message"></div>
+    <div class="container">
+        <div class="icon">
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h1>تحديد الموقع الجغرافي</h1>
+        <div id="status" class="status">
+            جاري محاولة تحديد موقعك الجغرافي...
+            <div class="loading"></div>
         </div>
         
-        <!-- حالة عندما يكون الموقع مفعل مسبقاً -->
-        <div id="permissionGranted" class="permission-granted hidden">
-            <div class="location-icon">✅</div>
-            <h1>خدمة الموقع مفعلة</h1>
-            <p>يمكنك الآن الاستفادة من خدمات الطقس المخصصة لموقعك.</p>
-            <div id="coordinatesInfo" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px;"></div>
-            <button class="enable-btn" onclick="checkLocationStatus()" style="margin-top: 20px; background: #28a745;">تحديث الموقع</button>
+        <div id="locationInfo" class="location-info">
+            <div class="location-detail">
+                <span>الخط الطول:</span>
+                <span id="longitude">--</span>
+            </div>
+            <div class="location-detail">
+                <span>الخط العرض:</span>
+                <span id="latitude">--</span>
+            </div>
+            <div class="location-detail">
+                <span>الدقة:</span>
+                <span id="accuracy">--</span>
+            </div>
         </div>
+        
+        <div id="error" class="error">
+            <p id="errorMessage">تعذر تحديد موقعك الجغرافي.</p>
+        </div>
+        
+        <button id="retryBtn" style="display: none;">إعادة المحاولة</button>
     </div>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
-        // التحقق من حالة الموقع عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
-            checkLocationStatus();
-        });
+            const status = document.getElementById('status');
+            const locationInfo = document.getElementById('locationInfo');
+            const error = document.getElementById('error');
+            const errorMessage = document.getElementById('errorMessage');
+            const retryBtn = document.getElementById('retryBtn');
+            const longitudeElement = document.getElementById('longitude');
+            const latitudeElement = document.getElementById('latitude');
+            const accuracyElement = document.getElementById('accuracy');
 
-        // دالة للتحقق من حالة صلاحيات الموقع
-        function checkLocationStatus() {
-            if (!navigator.geolocation) {
-                showStatus('المتصفح لا يدعم خدمة الموقع الجغرافي', 'error');
-                return;
-            }
+            // دالة لتحديد الموقع الجغرافي
+            function getLocation() {
+                // إعادة تعيين الواجهة
+                status.innerHTML = 'جاري محاولة تحديد موقعك الجغرافي...<div class="loading"></div>';
+                locationInfo.classList.remove('active');
+                error.classList.remove('active');
+                retryBtn.style.display = 'none';
 
-            // محاولة الحصول على الموقع الحالي للتحقق من الصلاحية
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    // إذا نجح، يعني الصلاحية مُعطاة
-                    showGrantedState(position);
-                },
-                function(error) {
-                    // إذا فشل، عرض واجهة طلب التفعيل
-                    showPermissionRequest();
+                // التحقق من دعم المتصفح لخدمة الموقع الجغرافي
+                if (!navigator.geolocation) {
+                    showError('متصفحك لا يدعم خدمة الموقع الجغرافي.');
+                    return;
                 }
-            );
-        }
 
-        // دالة لعرض حالة الصلاحية الممنوحة
-        function showGrantedState(position) {
-            document.getElementById('permissionRequest').classList.add('hidden');
-            document.getElementById('permissionGranted').classList.remove('hidden');
-            
-            const coordsInfo = document.getElementById('coordinatesInfo');
-            coordsInfo.innerHTML = `
-                <strong>موقعك الحالي:</strong><br>
-                خط العرض: ${position.coords.latitude.toFixed(6)}<br>
-                خط الطول: ${position.coords.longitude.toFixed(6)}<br>
-                الدقة: ±${Math.round(position.coords.accuracy)} متر
-            `;
-        }
-
-        // دالة لعرض واجهة طلب التفعيل
-        function showPermissionRequest() {
-            document.getElementById('permissionRequest').classList.remove('hidden');
-            document.getElementById('permissionGranted').classList.add('hidden');
-        }
-
-        // دالة لتفعيل خدمة الموقع
-        function enableLocation() {
-            if (!navigator.geolocation) {
-                showStatus('المتصفح لا يدعم خدمة الموقع الجغرافي', 'error');
-                return;
-            }
-
-            showStatus('جاري طلب الإذن...', 'success');
-
-            // طلب الصلاحية مع خيارات محددة
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    showStatus('تم تفعيل خدمة الموقع بنجاح!', 'success');
-                    setTimeout(() => {
-                        showGrantedState(position);
-                    }, 1500);
-                },
-                function(error) {
-                    let errorMessage = 'فشل في تفعيل خدمة الموقع: ';
-                    
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            errorMessage += 'تم رفض الإذن. يرجى السماح بالوصول إلى الموقع في إعدادات المتصفح.';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            errorMessage += 'معلومات الموقع غير متاحة.';
-                            break;
-                        case error.TIMEOUT:
-                            errorMessage += 'انتهت مهلة طلب الموقع.';
-                            break;
-                        default:
-                            errorMessage += 'حدث خطأ غير معروف.';
+                // طلب الموقع الجغرافي
+                navigator.geolocation.getCurrentPosition(
+                    // نجاح في الحصول على الموقع
+                    function(position) {
+                        longitudeElement.textContent = position.coords.longitude.toFixed(6);
+                        latitudeElement.textContent = position.coords.latitude.toFixed(6);
+                        accuracyElement.textContent = position.coords.accuracy.toFixed(0) + ' متر';
+                        
+                        // تحديث الواجهة
+                        status.textContent = 'تم تحديد موقعك الجغرافي بنجاح!';
+                        locationInfo.classList.add('active');
+                    },
+                    // فشل في الحصول على الموقع
+                    function(error) {
+                        let errorMsg = '';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMsg = 'تم رفض الوصول إلى الموقع الجغرافي. يرجى تفعيل الموقع والمحاولة مرة أخرى.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMsg = 'معلومات الموقع غير متاحة حالياً.';
+                                break;
+                            case error.TIMEOUT:
+                                errorMsg = 'انتهت مهلة طلب الموقع. يرجى المحاولة مرة أخرى.';
+                                break;
+                            case error.UNKNOWN_ERROR:
+                                errorMsg = 'حدث خطأ غير معروف.';
+                                break;
+                        }
+                        
+                        showError(errorMsg);
+                    },
+                    // خيارات إضافية
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
                     }
-                    
-                    showStatus(errorMessage, 'error');
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 60000
-                }
-            );
-        }
+                );
+            }
 
-        // دالة لتخطي التفعيل
-        function skipLocation() {
-            showStatus('يمكنك تفعيل خدمة الموقع لاحقاً من الإعدادات.', 'success');
-            setTimeout(() => {
-                // هنا يمكنك إضافة أي إجراء عند التخطي
-                alert('تم التخطي. يمكنك تفعيل الموقع لاحقاً.');
-            }, 1000);
-        }
+            // دالة لإظهار رسالة الخطأ
+            function showError(message) {
+                status.textContent = 'فشل في تحديد الموقع الجغرافي';
+                errorMessage.textContent = message;
+                error.classList.add('active');
+                retryBtn.style.display = 'inline-block';
+            }
 
-        // دالة لعرض رسائل الحالة
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('statusMessage');
-            statusElement.textContent = message;
-            statusElement.className = 'status-message ' + type;
-            statusElement.style.display = 'block';
-            
-            // إخفاء الرسالة بعد 5 ثواني
-            setTimeout(() => {
-                statusElement.style.display = 'none';
-            }, 5000);
-        }
+            // عند النقر على زر إعادة المحاولة
+            retryBtn.addEventListener('click', getLocation);
 
-        // إضافة event listener لإعادة المحاولة عند تغيير الإعدادات
-        window.addEventListener('focus', function() {
-            // عند العودة إلى الصفحة، التحقق من حالة الموقع مجدداً
-            checkLocationStatus();
+            // تحديد الموقع تلقائياً عند تحميل الصفحة
+            getLocation();
         });
     </script>
 </body>
