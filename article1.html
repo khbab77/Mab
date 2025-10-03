@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قمة دولية لبحث سبل حل النزاعات الإقليمية - النبأ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .article-header {
+            margin-bottom: 30px;
+        }
+        
+        .article-category {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 5px 15px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .article-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .article-image {
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .article-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+        }
+        
+        .article-content h3 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: #333;
+        }
+        
+        .article-content h4 {
+            font-size: 20px;
+            margin: 25px 0 10px;
+            color: #333;
+        }
+        
+        .article-tags {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .article-tags h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .article-tags a {
+            display: inline-block;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin: 0 5px 10px 0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .article-tags a:hover {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        
+        .author-box {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-image {
+            flex: 0 0 100px;
+            margin-left: 25px;
+        }
+        
+        .author-image img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .author-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .author-info p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .author-social a {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            background-color: #e74c3c;
+            color: #fff;
+            border-radius: 50%;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .author-social a:hover {
+            background-color: #c0392b;
+        }
+        
+        .related-articles {
+            margin-top: 40px;
+        }
+        
+        .related-articles h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .related-articles h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 3px;
+            background-color: #e74c3c;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .comments-section {
+            margin-top: 40px;
+        }
+        
+        .comments-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .comments-section h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 3px;
+            background-color: #e74c3c;
+        }
+        
+        .comment-form {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .comment-form input,
+        .comment-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            outline: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+        }
+        
+        .comment-form input:focus,
+        .comment-form textarea:focus {
+            border-color: #e74c3c;
+        }
+        
+        .comment-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .comment-form button {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .comment-form button:hover {
+            background-color: #c0392b;
+        }
+        
+        .comment {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comment-header {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .comment-avatar {
+            flex: 0 0 50px;
+            margin-left: 15px;
+        }
+        
+        .comment-avatar img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .comment-meta h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .comment-meta span {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .comment-body {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .comment-reply {
+            margin-top: 15px;
+        }
+        
+        .comment-reply a {
+            font-size: 14px;
+            color: #e74c3c;
+        }
+        
+        .article-share {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .share-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .share-links {
+            display: flex;
+        }
+        
+        .share-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .share-links a.facebook {
+            background-color: #3b5998;
+        }
+        
+        .share-links a.twitter {
+            background-color: #1da1f2;
+        }
+        
+        .share-links a.whatsapp {
+            background-color: #25d366;
+        }
+        
+        .share-links a.telegram {
+            background-color: #0088cc;
+        }
+        
+        .share-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 24px;
+            }
+            
+            .author-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .author-image {
+                margin-left: 0;
+                margin-bottom: 15px;
+            }
+            
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .article-share {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .share-title {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-left">
+                <span><i class="far fa-calendar-alt"></i> <span id="current-date"></span></span>
+            </div>
+            <div class="top-bar-right">
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>الن<b>بأ</b></h1>
+                </a>
+            </div>
+            <div class="header-ads">
+                <a href="#"><img src="https://via.placeholder.com/728x90" alt="إعلان"></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="main-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="#">السياسة</a></li>
+                <li><a href="#">الاقتصاد</a></li>
+                <li><a href="#">الرياضة</a></li>
+                <li><a href="#">ثقافة وفن</a></li>
+                <li><a href="#">تكنولوجيا</a></li>
+                <li><a href="#">صحة</a></li>
+                <li><a href="#">مقالات الرأي</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div class="search-icon">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Box -->
+    <div class="search-box">
+        <div class="container">
+            <form action="#">
+                <input type="text" placeholder="ابحث في الموقع...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+                <div class="search-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Article Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="article-container">
+                <div class="article-header">
+                    <div class="article-category">سياسية</div>
+                    <h1 class="article-title">قمة دولية لبحث سبل حل النزاعات الإقليمية</h1>
+                    <div class="article-meta">
+                        <span><i class="far fa-user"></i> أحمد محمد</span>
+                        <span><i class="far fa-clock"></i> 2 ساعات مضت</span>
+                        <span><i class="far fa-comment"></i> 42 تعليق</span>
+                        <span><i class="far fa-eye"></i> 5,234 مشاهدة</span>
+                    </div>
+                </div>
+                
+                <div class="article-image">
+                    <img src="https://via.placeholder.com/900x500" alt="قمة دولية">
+                </div>
+                
+                <div class="article-share">
+                    <div class="share-title">شارك المقال</div>
+                    <div class="share-links">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="telegram"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="article-content">
+                    <p>انطلقت اليوم أعمال القمة الدولية التي تجمع زعماء العالم لبحث سبل حل النزاعات الإقليمية المستمرة منذ عدة سنوات. وأكد المتحدثون في كلمات الافتتاحية على أهمية الحوار والتفاهم بين الدول لحل الأزمات.</p>
+                    
+                    <p>يشارك في القمة أكثر من 50 دولة ومنظمة دولية، وتستمر أعمالها لمدة ثلاثة أيام، وستركز على عدة محاور رئيسية أبرزها الأزمات في الشرق الأوسط وأفريقيا وشرق آسيا.</p>
+                    
+                    <h3>أهم المحاور المطروحة</h3>
+                    <p>شهد اليوم الأول من القمة نقاشات مكثفة حول الأزمة في الشرق الأوسط، حيث تم التركيز على ضرورة إيجاد حل عادل ودائم للقضية الفلسطينية، وإنهاء الحروب في اليمن وسوريا وليبيا.</p>
+                    
+                    <p>كما ناقش المشاركون الأزمة الأوكرانية وتداعياتها على الأمن والاستقرار في أوروبا، وأكدوا على أهمية احترام سيادة الدول وسلامة أراضيها.</p>
+                    
+                    <h3>موقف الدول الكبرى</h3>
+                    <p>أكدت الولايات المتحدة الأمريكية في كلمتها على التزامها بحل النزاعات عبر الحوار والدبلوماسية، مشيرة إلى أنها ستواصل جهودها لتحقيق السلام في جميع أنحاء العالم.</p>
+                    
+                    <p>من جانبها، ركزت روسيا على أهمية إصلاح منظمة الأمم المتحدة وجعلها أكثر فعالية في التعامل مع الأزمات الدولية، مشيرة إلى ضرورة إعطاء مزيد من الصوت للدول النامية في صنع القرار الدولي.</p>
+                    
+                    <p>أما الصين فقد دعت إلى بناء "مجتمع مصير مشترك للبشرية" وتعزيز التعاون متعدد الأطراف، معربة عن استعدادها للعب دور أكبر في حل النزاعات الإقليمية.</p>
+                    
+                    <h3>توقعات الخبراء</h3>
+                    <p>يرى الخبراء أن هذه القمة قد تشكل نقطة تحول في التعامل مع النزاعات الإقليمية، خاصة أنها تجمع بين أطراف متعددة تختلف في مواقفها ورؤاها.</p>
+                    
+                    <p>ويتوقع أن يصدر عن القمة بيان ختامي يحدد آليات جديدة للتعامل مع الأزمات، ويؤكد على أهمية الحوار والتفاهم بين الدول، ويضع خارطة طريق لحل النزاعات القائمة.</p>
+                    
+                    <p>وستواصل القمة أعمالها غداً بمناقشة الأزمة الاقتصادية العالمية وتداعياتها على الاستقرار في الدول النامية، بالإضافة إلى بحث سبل مواجهة التحديات المشتركة مثل تغير المناخ والإرهاب.</p>
+                    
+                    <h4>ردود الفعل الدولية</h4>
+                    <p>لقيت القمة ترحيباً دولياً واسعاً، حيث عبرت العديد من الدول عن أملها في أن تسفر هذه المبادرة عن نتائج إيجابية على الأرض. وقال المتحدث باسم الأمم المتحدة إن المنظمة الدولية ترحب بأي مبادرة تهدف إلى تعزيز السلام والأمن الدوليين.</p>
+                    
+                    <p>من جانبه، أعرب الاتحاد الأفريقي عن أمله في أن تولي القمة اهتماماً خاصاً بالأزمات المستمرة في القارة الأفريقية، خاصة في منطقة الساحل والقرن الأفريقي.</p>
+                </div>
+                
+                <div class="article-tags">
+                    <h3>الوسوم</h3>
+                    <a href="#">سياسة</a>
+                    <a href="#">علاقات دولية</a>
+                    <a href="#">قمة</a>
+                    <a href="#">نزاعات</a>
+                    <a href="#">سلام</a>
+                </div>
+                
+                <div class="author-box">
+                    <div class="author-image">
+                        <img src="https://via.placeholder.com/100x100" alt="الكاتب">
+                    </div>
+                    <div class="author-info">
+                        <h3>أحمد محمد</h3>
+                        <p>صحفي متخصص في الشؤون السياسية والدبلوماسية، يعمل في مجال الصحافة منذ أكثر من 10 سنوات، ويغطي الأحداث الدولية والمؤتمرات السياسية الكبرى.</p>
+                        <div class="author-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="related-articles">
+                    <h2>مقالات ذات صلة</h2>
+                    <div class="related-grid">
+                        <div class="news-item">
+                            <div class="news-image">
+                                <img src="https://via.placeholder.com/300x200" alt="مقال ذات صلة">
+                            </div>
+                            <div class="news-content">
+                                <h3><a href="#">تقرير جديد عن أوضاع اللاجئين في العالم</a></h3>
+                                <div class="post-meta">
+                                    <span><i class="far fa-clock"></i> يوم واحد مضى</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-image">
+                                <img src="https://via.placeholder.com/300x200" alt="مقال ذات صلة">
+                            </div>
+                            <div class="news-content">
+                                <h3><a href="#">مجلس الأمن يناقش الأزمة في السودان</a></h3>
+                                <div class="post-meta">
+                                    <span><i class="far fa-clock"></i> يومين مضتا</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comments-section">
+                    <h2>التعليقات (42)</h2>
+                    <div class="comment-form">
+                        <form action="#">
+                            <input type="text" placeholder="الاسم">
+                            <input type="email" placeholder="البريد الإلكتروني">
+                            <textarea placeholder="أضف تعليقك..."></textarea>
+                            <button type="submit">نشر التعليق</button>
+                        </form>
+                    </div>
+                    
+                    <div class="comment">
+                        <div class="comment-header">
+                            <div class="comment-avatar">
+                                <img src="https://via.placeholder.com/50x50" alt="معلق">
+                            </div>
+                            <div class="comment-meta">
+                                <h4>محمد علي</h4>
+                                <span>منذ ساعة واحدة</span>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            <p>مقال رائع ومفصل، أتمنى أن تؤتي هذه القمة ثمارها وتساهم في حل النزاعات المستمرة منذ سنوات.</p>
+                        </div>
+                        <div class="comment-reply">
+                            <a href="#">رد</a>
+                        </div>
+                    </div>
+                    
+                    <div class="comment">
+                        <div class="comment-header">
+                            <div class="comment-avatar">
+                                <img src="https://via.placeholder.com/50x50" alt="معلق">
+                            </div>
+                            <div class="comment-meta">
+                                <h4>فاطمة أحمد</h4>
+                                <span>منذ 3 ساعات</span>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            <p>السلام حل يحتاج إلى إرادة دولية صادقة، آمل أن تكون هذه القمة بداية لتلك الإرادة.</p>
+                        </div>
+                        <div class="comment-reply">
+                            <a href="#">رد</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="footer-widget about-widget">
+                            <div class="footer-logo">
+                                <h2>الن<b>بأ</b></h2>
+                            </div>
+                            <p>موقع إخباري شامل يقدم أحدث الأخبار والمقالات من مختلف المصادر الموثوقة حول العالم.</p>
+                            <div class="footer-social">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-youtube"></i></a>
+                                <a href="#"><i class="fab fa-telegram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="footer-widget links-widget">
+                            <h3>روابط سريعة</h3>
+                            <ul class="footer-links">
+                                <li><a href="index.html">الرئيسية</a></li>
+                                <li><a href="#">من نحن</a></li>
+                                <li><a href="#">السياسة الخصوصية</a></li>
+                                <li><a href="#">شروط الاستخدام</a></li>
+                                <li><a href="#">فريق العمل</a></li>
+                                <li><a href="contact.html">اتصل بنا</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="footer-widget contact-widget">
+                            <h3>تواصل معنا</h3>
+                            <ul class="contact-info">
+                                <li><i class="fas fa-map-marker-alt"></i> العنوان: شارع الملك فهد، الرياض</li>
+                                <li><i class="fas fa-phone"></i> الهاتف: +966 12 345 6789</li>
+                                <li><i class="fas fa-envelope"></i> البريد: info@alnaba.com</li>
+                            </ul>
+                            <div class="newsletter-form">
+                                <form action="#">
+                                    <input type="email" placeholder="بريدك الإلكتروني">
+                                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="copyright">
+                    <p>&copy; 2023 النبأ. جميع الحقوق محفوظة.</p>
+                </div>
+                <div class="footer-menu">
+                    <ul>
+                        <li><a href="#">السياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الاستخدام</a></li>
+                        <li><a href="#">خريطة الموقع</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
