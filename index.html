@@ -3,331 +3,561 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الطقس</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>النبأ - مصدرك الموثوق للأخبار</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
-        
-        body {
-            font-family: 'Tajawal', sans-serif;
-        }
-        
-        .weather-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .location-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .5;
-            }
-        }
-        
-        .weather-card {
-            transition: all 0.3s ease;
-        }
-        
-        .weather-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .location-request-card {
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen weather-gradient">
-    <!-- شاشة التحميل -->
-    <div id="loadingScreen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="text-center">
-            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-            <p class="text-white text-lg">جاري التحميل...</p>
-        </div>
-    </div>
-
-    <!-- المحتوى الرئيسي -->
-    <div id="mainContent" class="hidden min-h-screen p-4">
-        <!-- الهيدر -->
-        <header class="glass-effect rounded-2xl p-4 mb-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3 space-x-reverse">
-                    <i class="fas fa-cloud-sun text-white text-2xl"></i>
-                    <h1 class="text-white text-2xl font-bold">تطبيق الطقس</h1>
-                </div>
-                <button onclick="refreshLocation()" class="glass-effect rounded-full p-3 text-white hover:bg-white hover:bg-opacity-20 transition">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-left">
+                <span><i class="far fa-calendar-alt"></i> <span id="current-date"></span></span>
             </div>
-        </header>
-
-        <!-- معلومات الموقع والطقس -->
-        <div class="glass-effect rounded-3xl p-6 mb-6 weather-card">
-            <div class="text-center text-white">
-                <div class="flex items-center justify-center mb-4">
-                    <i class="fas fa-map-marker-alt text-2xl ml-2"></i>
-                    <h2 id="locationName" class="text-2xl font-semibold">جاري تحديد الموقع...</h2>
-                </div>
-                <div class="mb-6">
-                    <i class="fas fa-sun text-6xl mb-4 text-yellow-300"></i>
-                    <div class="text-6xl font-light mb-2">25°</div>
-                    <p class="text-xl opacity-90">مشمس</p>
-                </div>
-                <div class="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                        <i class="fas fa-wind text-xl mb-1"></i>
-                        <p class="text-sm opacity-75">الرياح</p>
-                        <p class="font-semibold">12 كم/س</p>
-                    </div>
-                    <div>
-                        <i class="fas fa-tint text-xl mb-1"></i>
-                        <p class="text-sm opacity-75">الرطوبة</p>
-                        <p class="font-semibold">65%</p>
-                    </div>
-                    <div>
-                        <i class="fas fa-eye text-xl mb-1"></i>
-                        <p class="text-sm opacity-75">الرؤية</p>
-                        <p class="font-semibold">10 كم</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- التوقعات اليومية -->
-        <div class="glass-effect rounded-3xl p-6">
-            <h3 class="text-white text-xl font-semibold mb-4">التوقعات اليومية</h3>
-            <div class="space-y-3">
-                <div class="flex items-center justify-between text-white">
-                    <span class="opacity-75">الصباح</span>
-                    <i class="fas fa-sun text-yellow-300"></i>
-                    <span>22°</span>
-                </div>
-                <div class="flex items-center justify-between text-white">
-                    <span class="opacity-75">الظهر</span>
-                    <i class="fas fa-sun text-yellow-300"></i>
-                    <span>28°</span>
-                </div>
-                <div class="flex items-center justify-between text-white">
-                    <span class="opacity-75">المساء</span>
-                    <i class="fas fa-cloud-sun text-gray-300"></i>
-                    <span>24°</span>
-                </div>
-                <div class="flex items-center justify-between text-white">
-                    <span class="opacity-75">الليل</span>
-                    <i class="fas fa-moon text-blue-200"></i>
-                    <span>18°</span>
+            <div class="top-bar-right">
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- واجهة طلب تفعيل الموقع -->
-    <div id="locationRequest" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40">
-        <div class="location-request-card glass-effect rounded-3xl p-8 max-w-md w-full text-center">
-            <div class="mb-6">
-                <div class="location-pulse inline-block p-6 bg-white bg-opacity-20 rounded-full mb-4">
-                    <i class="fas fa-map-marker-alt text-white text-4xl"></i>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>الن<b>بأ</b></h1>
+                </a>
+            </div>
+            <div class="header-ads">
+                <a href="#"><img src="https://via.placeholder.com/728x90" alt="إعلان"></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="main-menu">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
+                <li><a href="#">السياسة</a></li>
+                <li><a href="#">الاقتصاد</a></li>
+                <li><a href="#">الرياضة</a></li>
+                <li><a href="#">ثقافة وفن</a></li>
+                <li><a href="#">تكنولوجيا</a></li>
+                <li><a href="#">صحة</a></li>
+                <li><a href="#">مقالات الرأي</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div class="search-icon">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Box -->
+    <div class="search-box">
+        <div class="container">
+            <form action="#">
+                <input type="text" placeholder="ابحث في الموقع...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+                <div class="search-close">
+                    <i class="fas fa-times"></i>
                 </div>
-                <h2 class="text-white text-2xl font-bold mb-2">تفعيل خدمة الموقع</h2>
-                <p class="text-white opacity-80 mb-6">
-                    نحتاج إلى الوصول إلى موقعك الجغرافي لتزويدك بمعلومات الطقس الدقيقة في منطقتك
-                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Breaking News Ticker -->
+    <div class="breaking-news">
+        <div class="container">
+            <div class="breaking-title">
+                <span>عاجل</span>
             </div>
-            
-            <div class="space-y-3">
-                <button onclick="requestLocation()" class="w-full bg-white text-purple-700 font-semibold py-3 px-6 rounded-full hover:bg-opacity-90 transition transform hover:scale-105">
-                    <i class="fas fa-location-arrow ml-2"></i>
-                    تفعيل الموقع
-                </button>
-                <button onclick="denyLocation()" class="w-full glass-effect text-white font-semibold py-3 px-6 rounded-full hover:bg-white hover:bg-opacity-20 transition">
-                    لاحقاً
-                </button>
-            </div>
-            
-            <div class="mt-6 text-white text-sm opacity-60">
-                <p>يتم استخدام موقعك فقط لعرض معلومات الطقس</p>
-                <p>ولا يتم تخزينه أو مشاركته مع أي جهة خارجية</p>
+            <div class="breaking-ticker">
+                <div class="swiper breakingSwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide"><a href="#">اجتماع طارئ للوزراء لمناقشة الأزمة الاقتصادية</a></div>
+                        <div class="swiper-slide"><a href="#">نتائج جديدة لبطولة العالم لكرة القدم</a></div>
+                        <div class="swiper-slide"><a href="#">اكتشاف طبي جديد قد يغير علاج الأمراض المزمنة</a></div>
+                        <div class="swiper-slide"><a href="#">توقعات بزيادة أسعار النفط خلال الأسبوع المقبل</a></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // التحقق من دعم المتصفح لخدمة الموقع
-        function checkGeolocationSupport() {
-            if (!navigator.geolocation) {
-                showLocationError('متصفحك لا يدعم خدمة تحديد الموقع');
-                return false;
-            }
-            return true;
-        }
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- Main News Section -->
+                <div class="col-lg-8">
+                    <!-- Featured News Slider -->
+                    <div class="featured-slider">
+                        <div class="swiper mainSwiper">
+                            <div class="swiper-wrapper">
+                                <!-- Slide 1 -->
+                                <div class="swiper-slide">
+                                    <div class="featured-slide">
+                                        <div class="featured-image">
+                                            <img src="https://via.placeholder.com/800x450" alt="خبر رئيسي">
+                                            <div class="category-tag">سياسية</div>
+                                        </div>
+                                        <div class="featured-content">
+                                            <h2><a href="article1.html">قمة دولية لبحث سبل حل النزاعات الإقليمية</a></h2>
+                                            <div class="post-meta">
+                                                <span><i class="far fa-user"></i> أحمد محمد</span>
+                                                <span><i class="far fa-clock"></i> 2 ساعات مضت</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Slide 2 -->
+                                <div class="swiper-slide">
+                                    <div class="featured-slide">
+                                        <div class="featured-image">
+                                            <img src="https://via.placeholder.com/800x450" alt="خبر رئيسي">
+                                            <div class="category-tag">اقتصاد</div>
+                                        </div>
+                                        <div class="featured-content">
+                                            <h2><a href="#">ارتفاع أسعار النفط العالمية مع تزايد الطلب</a></h2>
+                                            <div class="post-meta">
+                                                <span><i class="far fa-user"></i> سارة أحمد</span>
+                                                <span><i class="far fa-clock"></i> 3 ساعات مضت</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Slide 3 -->
+                                <div class="swiper-slide">
+                                    <div class="featured-slide">
+                                        <div class="featured-image">
+                                            <img src="https://via.placeholder.com/800x450" alt="خبر رئيسي">
+                                            <div class="category-tag">رياضة</div>
+                                        </div>
+                                        <div class="featured-content">
+                                            <h2><a href="#">فوز فريق الأهلي على نظيره في الدوري</a></h2>
+                                            <div class="post-meta">
+                                                <span><i class="far fa-user"></i> محمد علي</span>
+                                                <span><i class="far fa-clock"></i> 5 ساعات مضت</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
 
-        // التحقق من حالة خدمة الموقع
-        function checkLocationPermission() {
-            if (!checkGeolocationSupport()) return;
+                    <!-- Section Tabs -->
+                    <div class="section-tabs">
+                        <div class="tabs-header">
+                            <ul class="tabs-nav">
+                                <li class="active"><a href="#latest">الأحدث</a></li>
+                                <li><a href="#politics">السياسة</a></li>
+                                <li><a href="#economy">الاقتصاد</a></li>
+                                <li><a href="#sports">الرياضة</a></li>
+                                <li><a href="#tech">التكنولوجيا</a></li>
+                            </ul>
+                        </div>
+                        <div class="tabs-content">
+                            <!-- Latest News Tab -->
+                            <div class="tab-pane active" id="latest">
+                                <div class="news-grid">
+                                    <!-- News Item 1 -->
+                                    <div class="news-item">
+                                        <div class="news-image">
+                                            <img src="https://via.placeholder.com/300x200" alt="خبر">
+                                            <div class="category-tag">اقتصاد</div>
+                                        </div>
+                                        <div class="news-content">
+                                            <h3><a href="article2.html">ارتفاع أسعار النفط العالمية مع تزايد الطلب</a></h3>
+                                            <div class="post-meta">
+                                                <span><i class="far fa-clock"></i> 3 ساعات مضت</span>
+                                            </div>
+                                            <p>شهدت أسعار النفط العالمية ارتفاعاً ملحوظاً اليوم مع تزايد الطلب في الأسواق الآسيوية وتوترات الإمدادات...</p>
+                                        </div>
+                                    </div>
 
-            navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
-                if (permissionStatus.state === 'granted') {
-                    // الموقع مفعول، عرض المحتوى
-                    showMainContent();
-                    getCurrentLocation();
-                } else if (permissionStatus.state === 'prompt') {
-                    // لم يتم اتخاذ قرار بعد، إظهار واجهة الطلب
-                    showLocationRequest();
-                } else if (permissionStatus.state === 'denied') {
-                    // تم رفض الموقع، إظهار واجهة الطلب مرة أخرى
-                    showLocationRequest();
-                }
-                
-                // مراقبة التغييرات في الصلاحيات
-                permissionStatus.onchange = function() {
-                    if (this.state === 'granted') {
-                        showMainContent();
-                        getCurrentLocation();
-                    }
-                };
-            }).catch(error => {
-                // إذا فشل التحقق من الصلاحيات، حاول طلب الموقع مباشرة
-                showLocationRequest();
-            });
-        }
+                                    <!-- News Item 2 -->
+                                    <div class="news-item">
+                                        <div class="news-image">
+                                            <img src="https://via.placeholder.com/300x200" alt="خبر">
+                                            <div class="category-tag">رياضة</div>
+                                        </div>
+                                        <div class="news-content">
+                                            <h3><a href="article3.html">فوز فريق الأهلي على نظيره في الدوري</a></h3>
+                                            <div class="post-meta">
+                                                <span><i class="far fa-clock"></i> 5 ساعات مضت</span>
+                                            </div>
+                                            <p>تمكن فريق الأهلي من تحقيق فوز ثمين على نظيره بنتيجة 2-1 في المباراة التي جمعت بينهما اليوم على استاد...</p>
+                                        </div>
+                                    </div>
 
-        // طلب الموقع
-        function requestLocation() {
-            if (!checkGeolocationSupport()) return;
+                                    <!-- News Item 3 -->
+                                    <div class="news-item">
+                                        <div class="news-image">
+                                            <img src="https://via.placeholder.com/300x200" alt="خبر">
+                                            <div class="category-tag">تكنولوجيا</div>
+                                        </div>
+                                        <div class="news-content">
+                                            <h3><a href="article4.html">إطلاق هاتف جديد بكاميرا مبتكرة</a></h3>
+                                            <div class="post-meta">
+                                                <span><i class="far fa-clock"></i> 6 ساعات مضت</span>
+                                            </div>
+                                            <p>أعلنت شركة التكنولوجيا العملاقة عن إطلاق هاتفها الجديد الذي يتميز بكاميرا مبتكرة تقوم بتحسين جودة الصور...</p>
+                                        </div>
+                                    </div>
 
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    // تم الحصول على الموقع بنجاح
-                    hideLocationRequest();
-                    showMainContent();
-                    updateLocationInfo(position);
-                },
-                (error) => {
-                    // فشل في الحصول على الموقع
-                    let errorMessage = 'حدث خطأ في تحديد موقعك';
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            errorMessage = 'تم رفض الوصول إلى موقعك. يرجى تفعيل الموقع من إعدادات الجهاز';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            errorMessage = 'معلومات الموقع غير متاحة';
-                            break;
-                        case error.TIMEOUT:
-                            errorMessage = 'انتهت مهلة طلب الموقع';
-                            break;
-                    }
-                    showLocationError(errorMessage);
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 60000
-                }
-            );
-        }
+                                    <!-- News Item 4 -->
+                                    <div class="news-item">
+                                        <div class="news-image">
+                                            <img src="https://via.placeholder.com/300x200" alt="خبر">
+                                            <div class="category-tag">صحة</div>
+                                        </div>
+                                        <div class="news-content">
+                                            <h3><a href="article5.html">دراسة جديدة: المشي يومياً يقلل من مخاطر الأمراض</a></h3>
+                                            <div class="post-meta">
+                                                <span><i class="far fa-clock"></i> 8 ساعات مضت</span>
+                                            </div>
+                                            <p>أظهرت دراسة جديدة أن المشي لمدة 30 دقيقة يومياً يمكن أن يقلل بشكل كبير من مخاطر الإصابة بالأمراض المزمنة...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Other tabs would have similar content -->
+                            <div class="tab-pane" id="politics">
+                                <div class="news-grid">
+                                    <!-- Politics news items would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane" id="economy">
+                                <div class="news-grid">
+                                    <!-- Economy news items would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane" id="sports">
+                                <div class="news-grid">
+                                    <!-- Sports news items would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane" id="tech">
+                                <div class="news-grid">
+                                    <!-- Tech news items would go here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        // الحصول على الموقع الحالي
-        function getCurrentLocation() {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    updateLocationInfo(position);
-                },
-                (error) => {
-                    console.error('Error getting location:', error);
-                }
-            );
-        }
+                    <!-- Opinion Section -->
+                    <div class="opinion-section">
+                        <div class="section-title">
+                            <h2>مقالات الرأي</h2>
+                            <a href="#" class="view-all">عرض الكل <i class="fas fa-angle-left"></i></a>
+                        </div>
+                        <div class="opinion-grid">
+                            <!-- Opinion Item 1 -->
+                            <div class="opinion-item">
+                                <div class="opinion-author">
+                                    <img src="https://via.placeholder.com/100x100" alt="كاتب">
+                                </div>
+                                <div class="opinion-content">
+                                    <div class="author-name">د. أحمد خالد</div>
+                                    <h3><a href="#">التغيرات الاقتصادية العالمية وتأثيرها على المنطقة</a></h3>
+                                    <p>تشهد الاقتصادات العالمية تحولات كبيرة في الفترة الحالية، وهذه التغيرات لها انعكاسات مباشرة على اقتصادات...</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Opinion Item 2 -->
+                            <div class="opinion-item">
+                                <div class="opinion-author">
+                                    <img src="https://via.placeholder.com/100x100" alt="كاتبة">
+                                </div>
+                                <div class="opinion-content">
+                                    <div class="author-name">نورة السعيد</div>
+                                    <h3><a href="#">دور التكنولوجيا في تطوير التعليم</a></h3>
+                                    <p>أحدثت التكنولوجيا ثورة في جميع المجالات، وكان للتعليم النصيب الأكبر من هذه التطورات، حيث أصبح من الممكن...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        // تحديث معلومات الموقع
-        function updateLocationInfo(position) {
-            const { latitude, longitude } = position.coords;
-            
-            // محاكاة الحصول على اسم الموقع (في التطبيق الحقيقي، ستستخدم خدمة جغرافية عكسية)
-            const locationNames = ['الرياض', 'جدة', 'الدمام', 'مكة', 'المدينة المنورة'];
-            const randomLocation = locationNames[Math.floor(Math.random() * locationNames.length)];
-            
-            document.getElementById('locationName').textContent = randomLocation;
-            
-            // يمكنك هنا إضافة استدعاء API لخدمة الطقس الحقيقية
-            console.log('Location:', latitude, longitude);
-        }
+                    <!-- Video Section -->
+                    <div class="video-section">
+                        <div class="section-title">
+                            <h2>فيديوهات</h2>
+                            <a href="#" class="view-all">عرض الكل <i class="fas fa-angle-left"></i></a>
+                        </div>
+                        <div class="video-grid">
+                            <!-- Video Item 1 -->
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img src="https://via.placeholder.com/300x200" alt="فيديو">
+                                    <div class="video-duration">05:42</div>
+                                    <a href="#" class="play-btn"><i class="fas fa-play"></i></a>
+                                </div>
+                                <div class="video-content">
+                                    <h3><a href="#">تقرير خاص عن الأزمة الاقتصادية العالمية</a></h3>
+                                    <div class="post-meta">
+                                        <span><i class="far fa-clock"></i> يوم واحد مضى</span>
+                                        <span><i class="far fa-eye"></i> 5,234 مشاهدة</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Video Item 2 -->
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img src="https://via.placeholder.com/300x200" alt="فيديو">
+                                    <div class="video-duration">03:15</div>
+                                    <a href="#" class="play-btn"><i class="fas fa-play"></i></a>
+                                </div>
+                                <div class="video-content">
+                                    <h3><a href="#">مقابلة حصرية مع وزير الاقتصاد</a></h3>
+                                    <div class="post-meta">
+                                        <span><i class="far fa-clock"></i> يومين مضتا</span>
+                                        <span><i class="far fa-eye"></i> 3,456 مشاهدة</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Video Item 3 -->
+                            <div class="video-item">
+                                <div class="video-thumbnail">
+                                    <img src="https://via.placeholder.com/300x200" alt="فيديو">
+                                    <div class="video-duration">07:28</div>
+                                    <a href="#" class="play-btn"><i class="fas fa-play"></i></a>
+                                </div>
+                                <div class="video-content">
+                                    <h3><a href="#">تغطية خاصة لبطولة العالم للشطرنج</a></h3>
+                                    <div class="post-meta">
+                                        <span><i class="far fa-clock"></i> 3 أيام مضت</span>
+                                        <span><i class="far fa-eye"></i> 2,789 مشاهدة</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        // تحديث الموقع
-        function refreshLocation() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            loadingScreen.classList.remove('hidden');
-            
-            setTimeout(() => {
-                getCurrentLocation();
-                loadingScreen.classList.add('hidden');
-            }, 1000);
-        }
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Trending News -->
+                    <div class="sidebar-widget trending-widget">
+                        <div class="widget-title">
+                            <h2>الأكثر تداولاً</h2>
+                        </div>
+                        <div class="trending-news">
+                            <ul>
+                                <li class="trending-item">
+                                    <span class="trending-number">1</span>
+                                    <div class="trending-content">
+                                        <h3><a href="#">تطورات جديدة في ملف المفاوضات</a></h3>
+                                        <div class="post-meta">
+                                            <span><i class="far fa-clock"></i> 2 ساعات مضت</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-number">2</span>
+                                    <div class="trending-content">
+                                        <h3><a href="#">انخفاض قيمة العملة المحلية</a></h3>
+                                        <div class="post-meta">
+                                            <span><i class="far fa-clock"></i> 4 ساعات مضت</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-number">3</span>
+                                    <div class="trending-content">
+                                        <h3><a href="#">نجاح عملية جراحية نادرة</a></h3>
+                                        <div class="post-meta">
+                                            <span><i class="far fa-clock"></i> 6 ساعات مضت</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-number">4</span>
+                                    <div class="trending-content">
+                                        <h3><a href="#">فيلم جديد يتصدر إيرادات السينما</a></h3>
+                                        <div class="post-meta">
+                                            <span><i class="far fa-clock"></i> 8 ساعات مضت</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-number">5</span>
+                                    <div class="trending-content">
+                                        <h3><a href="#">اكتشاف أثري جديد في الصحراء</a></h3>
+                                        <div class="post-meta">
+                                            <span><i class="far fa-clock"></i> 10 ساعات مضت</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-        // عرض واجهة طلب الموقع
-        function showLocationRequest() {
-            document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('locationRequest').classList.remove('hidden');
-            document.getElementById('mainContent').classList.add('hidden');
-        }
+                    <!-- Newsletter -->
+                    <div class="sidebar-widget newsletter-widget">
+                        <div class="widget-title">
+                            <h2>النشرة البريدية</h2>
+                        </div>
+                        <div class="newsletter-content">
+                            <p>اشترك في نشرتنا البريدية لتصلك آخر الأخبار</p>
+                            <form action="#">
+                                <input type="email" placeholder="بريدك الإلكتروني">
+                                <button type="submit">اشترك</button>
+                            </form>
+                        </div>
+                    </div>
 
-        // إخفاء واجهة طلب الموقع
-        function hideLocationRequest() {
-            document.getElementById('locationRequest').classList.add('hidden');
-        }
+                    <!-- Poll -->
+                    <div class="sidebar-widget poll-widget">
+                        <div class="widget-title">
+                            <h2>استطلاع رأي</h2>
+                        </div>
+                        <div class="poll-content">
+                            <h3>هل تؤيد الإجراءات الاقتصادية الجديدة؟</h3>
+                            <form action="#">
+                                <div class="poll-option">
+                                    <input type="radio" id="yes" name="poll" value="yes">
+                                    <label for="yes">نعم</label>
+                                </div>
+                                <div class="poll-option">
+                                    <input type="radio" id="no" name="poll" value="no">
+                                    <label for="no">لا</label>
+                                </div>
+                                <div class="poll-option">
+                                    <input type="radio" id="neutral" name="poll" value="neutral">
+                                    <label for="neutral">محايد</label>
+                                </div>
+                                <button type="submit">تصويت</button>
+                                <div class="poll-results">
+                                    <a href="#">عرض النتائج</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-        // عرض المحتوى الرئيسي
-        function showMainContent() {
-            document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('locationRequest').classList.add('hidden');
-            document.getElementById('mainContent').classList.remove('hidden');
-        }
+                    <!-- Tags -->
+                    <div class="sidebar-widget tags-widget">
+                        <div class="widget-title">
+                            <h2>الوسوم</h2>
+                        </div>
+                        <div class="tags-content">
+                            <a href="#">سياسة</a>
+                            <a href="#">اقتصاد</a>
+                            <a href="#">رياضة</a>
+                            <a href="#">تكنولوجيا</a>
+                            <a href="#">صحة</a>
+                            <a href="#">ثقافة</a>
+                            <a href="#">فن</a>
+                            <a href="#">تعليم</a>
+                            <a href="#">بيئة</a>
+                        </div>
+                    </div>
 
-        // عرض رسالة خطأ
-        function showLocationError(message) {
-            hideLocationRequest();
-            showMainContent();
-            
-            const locationName = document.getElementById('locationName');
-            locationName.innerHTML = `<i class="fas fa-exclamation-triangle text-yellow-400 ml-2"></i>${message}`;
-            locationName.classList.add('text-yellow-200');
-        }
+                    <!-- Advertisement -->
+                    <div class="sidebar-widget ads-widget">
+                        <a href="#"><img src="https://via.placeholder.com/300x250" alt="إعلان"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // رفض طلب الموقع
-        function denyLocation() {
-            showLocationError('تم رفض الوصول إلى الموقع. يرجى تفعيل الموقع لعرض معلومات الطقس الدقيقة');
-        }
+    <!-- Footer -->
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="footer-widget about-widget">
+                            <div class="footer-logo">
+                                <h2>الن<b>بأ</b></h2>
+                            </div>
+                            <p>موقع إخباري شامل يقدم أحدث الأخبار والمقالات من مختلف المصادر الموثوقة حول العالم.</p>
+                            <div class="footer-social">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-youtube"></i></a>
+                                <a href="#"><i class="fab fa-telegram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="footer-widget links-widget">
+                            <h3>روابط سريعة</h3>
+                            <ul class="footer-links">
+                                <li><a href="index.html">الرئيسية</a></li>
+                                <li><a href="#">من نحن</a></li>
+                                <li><a href="#">السياسة الخصوصية</a></li>
+                                <li><a href="#">شروط الاستخدام</a></li>
+                                <li><a href="#">فريق العمل</a></li>
+                                <li><a href="contact.html">اتصل بنا</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="footer-widget contact-widget">
+                            <h3>تواصل معنا</h3>
+                            <ul class="contact-info">
+                                <li><i class="fas fa-map-marker-alt"></i> العنوان: شارع الملك فهد، الرياض</li>
+                                <li><i class="fas fa-phone"></i> الهاتف: +966 12 345 6789</li>
+                                <li><i class="fas fa-envelope"></i> البريد: info@alnaba.com</li>
+                            </ul>
+                            <div class="newsletter-form">
+                                <form action="#">
+                                    <input type="email" placeholder="بريدك الإلكتروني">
+                                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="copyright">
+                    <p>&copy; 2023 النبأ. جميع الحقوق محفوظة.</p>
+                </div>
+                <div class="footer-menu">
+                    <ul>
+                        <li><a href="#">السياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الاستخدام</a></li>
+                        <li><a href="#">خريطة الموقع</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-        // عند تحميل الصفحة
-        window.addEventListener('load', () => {
-            // إخفاء شاشة التحميل بعد ثانية
-            setTimeout(() => {
-                checkLocationPermission();
-            }, 1000);
-        });
-    </script>
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
